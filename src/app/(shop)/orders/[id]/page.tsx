@@ -5,14 +5,14 @@ import { getOrderById } from "@/actions/order/get-order-by-id";
 import { currencyFormat } from "@/utils";
 import { OrderStatus, PayPalButton, Title } from "@/components";
 
+type Params = Promise<{ id: string }>
+
 interface Props {
-  params: {
-    id: string;
-  };
+  params: Params;
 }
 
 export default async function OrdersByIdPage({ params }: Props) {
-  const { id } = params;
+  const { id } = await params;
 
   // Todo: Llamar el server action
 

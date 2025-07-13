@@ -7,10 +7,10 @@ import { getProductBySlug } from '@/actions';
 import { Metadata, ResolvingMetadata } from 'next';
 import { AddToCart } from './ui/AddToCart';
 
+type Params = Promise<{ slug: string }>
+
 interface Props {
-  params: {
-    slug: string;
-  }
+  params: Params
 }
 
 export async function generateMetadata(

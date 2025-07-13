@@ -59,7 +59,6 @@ export const placeOrder = async (
 
     // Crear la transacción de base de datos
     try {
-
         const prismaTx = await prisma.$transaction(async (tx) => {
             // 1. Actualizar el stock de los productos
             const updatedProductsPromises = products.map((product) => {
@@ -146,10 +145,17 @@ export const placeOrder = async (
         }
 
 
-    } catch (error: any) {
+    } catch (e: unknown) {
+        let errorMsg;
+        if (typeof e === "string") {
+            errorMsg = e.toUpperCase() // we now know, `e` is a string
+        } else if (e instanceof Error) {
+            errorMsg = e.message // works, `e` narrowed to Error
+        }
+
         return {
             ok: false,
-            message: error?.message,
+            message: errorMsg,
         };
     }
 };

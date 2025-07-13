@@ -7,18 +7,18 @@ import { getPaginatedProductsWithImages } from '@/actions';
 import { Pagination, ProductGrid, Title } from '@/components';
 
 
+type Params = Promise<{ paramPage?: string }>
+
 
 interface Props {
-  searchParams: {
-    page?: string;
-  }
+  searchParams: Params
 }
 
 
 export default async function Home({ searchParams }: Props) {
-  const params = await searchParams; // ✅
+  const { paramPage } = await searchParams;
   
-  const page = params.page ? parseInt(params.page) : 1;
+  const page = paramPage ? parseInt(paramPage) : 1;
 
   const { products, currentPage, totalPages } = await getPaginatedProductsWithImages({ page });
 
