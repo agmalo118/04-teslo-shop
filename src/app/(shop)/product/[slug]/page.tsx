@@ -17,7 +17,7 @@ export async function generateMetadata(
   { params }: Props,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
-  const slug = params.slug;
+  const {slug} = await params;
 
   const product = await getProductBySlug(slug);
   
@@ -34,7 +34,7 @@ export async function generateMetadata(
 
 export default async function ProductBySlugPage({ params }: Props) {
   
-  const { slug } = params;
+  const { slug } = await params;
   const product = await getProductBySlug(slug)
 
   if (!product) {
