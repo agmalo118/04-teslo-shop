@@ -10,22 +10,21 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { IoCardOutline } from "react-icons/io5";
 
-interface Props {
-  searchParams: {
-    page?: string;
-  };
+interface SearchParams {
+  page?: string;
 }
 
+interface PageProps {
+  searchParams: Promise<SearchParams>;
+}
 
-export default async function OrdersPage(propsPromise: Promise<Props>) {
-  const { searchParams } = await propsPromise;
-  const { page } = searchParams;
-
-  const paramPage = page ? parseInt(page) : 1;
+export default async function OrdersPage({ searchParams }: PageProps) {
+  const sp = await searchParams;
+  const page = sp.page ? parseInt(sp.page) : 1;
 
 
   const { products, currentPage, totalPages } =
-    await getPaginatedProductsWithImages({ page: paramPage });
+    await getPaginatedProductsWithImages({ page });
 
   return (
     <>

@@ -5,20 +5,25 @@ import { Pagination, ProductGrid, Title } from "@/components";
 import { Gender } from "@prisma/client";
 import { notFound, redirect } from "next/navigation";
 
-interface Props {
-  params: {
-    gender: string
-  },
-  searchParams: {
-    page?: string;
-  };
+
+interface SearchParams {
+  page?: string;
+}
+interface Params {
+  gender: string;
 }
 
-export default async function GenderByPage(propsPromise: Promise<Props>) {
-  const { params, searchParams } = await propsPromise;
+interface PageProps {
+  params: Promise<Params>;
+  searchParams: Promise<SearchParams>;
+}
+
+export default async function GenderByPage({ params, searchParams }: PageProps) {
+  const pr = await params;
+  const sp = await searchParams;
   
-  const { gender } = params;
-  const { page } = searchParams;
+  const { gender } = pr;
+  const { page } = sp;
 
   const paramPage = page ? parseInt(page) : 1;
   
