@@ -11,8 +11,9 @@ import { useCartStore, useUIStore } from "@/store";
 export const TopMenu = () => {
 
     const openSideMenu = useUIStore((state) => state.openSideMenu);
-    const totalItemsInCart = useCartStore((state) => state.getTotalItems());
+    const triggerFocusInput = useUIStore(state => state.triggerFocusInput);
 
+    const totalItemsInCart = useCartStore((state) => state.getTotalItems());
     const [loaded, setLoaded] = useState(false);
 
     useEffect(() => {
@@ -57,9 +58,9 @@ export const TopMenu = () => {
 
             {/* Search, Cart, Menu */}
             <div className="flex items-center">
-                <Link href="/search" className="mx-2">
-                    <IoSearchOutline className="w-5 h-5" />
-                </Link>
+                <IoSearchOutline
+                    className="mx-2 w-5 h-5"
+                    onClick={() => { openSideMenu(); triggerFocusInput(); }} />
 
                 <Link href={
                     (totalItemsInCart === 0)

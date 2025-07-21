@@ -14,8 +14,7 @@ interface Props {
 export default async function OrdersByIdPage({ params }: Props) {
   const { id } = await params;
 
-  // Todo: Llamar el server action
-
+  // Llamar el server action
   const { ok, order } = await getOrderById(id);
 
   if (!ok) {

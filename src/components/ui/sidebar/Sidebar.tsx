@@ -4,18 +4,23 @@ import Link from "next/link";
 import clsx from "clsx";
 import { useSession } from "next-auth/react";
 import {
+    IoBodyOutline,
     IoCloseOutline,
     IoLogInOutline,
     IoLogOutOutline,
+    IoManOutline,
     IoPeopleOutline,
     IoPersonOutline,
     IoSearchOutline,
     IoShirtOutline,
     IoTicketOutline,
+    IoWomanOutline,
 } from "react-icons/io5";
 
 import { useUIStore } from "@/store";
 import { logout } from "@/actions";
+import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 
 export const Sidebar = () => {
     const isSideMenuOpen = useUIStore((state) => state.isSideMenuOpen);
@@ -24,6 +29,26 @@ export const Sidebar = () => {
     const { data: session } = useSession();
     const isAuthenticated = !!session?.user;
     const isAdmin = session?.user.role === "admin";
+
+    const inputRef = useRef<HTMLInputElement>(null);
+    const shouldFocusInput = useUIStore(state => state.shouldFocusInput);
+    const resetFocusInput = useUIStore(state => state.resetFocusInput);
+
+    useEffect(() => {
+        if (shouldFocusInput) {
+            inputRef.current?.focus();
+            resetFocusInput();  // resetea para que el trigger funcione otra vez después
+        }
+    }, [shouldFocusInput, resetFocusInput]);
+
+    const [inputValue, setInputValue] = useState("");
+    const router = useRouter();
+
+    function handleSearch() {
+        if (!inputValue.trim()) return;
+        router.push(`/search?param=${encodeURIComponent(inputValue)}`);
+        closeMenu();
+    }
 
     return (
         <div>
@@ -49,6 +74,38 @@ export const Sidebar = () => {
                     }
                 )}
             >
+                <Link
+                    href="/gender/men"
+                    onClick={() => closeMenu()}
+                >
+                    <IoManOutline
+                        size={40}
+                        className="absolute top-6 left-5 cursor-pointer block sm:hidden"
+                    />
+                </Link>
+
+                <Link
+                    href="/gender/women"
+                    onClick={() => closeMenu()}
+                >
+                    <IoWomanOutline
+                        size={40}
+                        className="absolute top-6 left-15 cursor-pointer block sm:hidden"
+                        onClick={() => closeMenu()}
+                    />
+                </Link>
+
+                <Link
+                    href="/gender/kid"
+                    onClick={() => closeMenu()}
+                >
+                    <IoManOutline
+                        size={30}
+                        className="absolute top-8 left-25 cursor-pointer block sm:hidden"
+                        onClick={() => closeMenu()}
+                    />
+                </Link>
+
                 <IoCloseOutline
                     size={50}
                     className="absolute top-5 right-5 cursor-pointer"
@@ -56,17 +113,24 @@ export const Sidebar = () => {
                 />
 
                 {/* Input */}
-                <div className="relative mt-14">
-                    <IoSearchOutline size={20} className="absolute top-2 left-2" />
+                <div className="relative mt-20">
+                    <IoSearchOutline id="search" size={20} className="absolute top-2 left-2" />
+
                     <input
+                        ref={inputRef}
+                        value={inputValue}
+                        onChange={e => setInputValue(e.target.value)}
                         type="text"
                         placeholder="Buscar"
-                        className="w-full bg-gray-50 rounded pl-10 py-1 pr-10 border-b-2 text-xl border-gray-200 focus:outline-none focus:border-blue-500"
+                        className="sm:w-[75%] w-[60%] bg-gray-50 rounded pl-10 py-1 pr-10 border-b-2 text-xl border-gray-200 focus:outline-none focus:border-blue-500"
                     />
+
+                    <button className="btn-primary sm:w-[20%] w-[30%] float-end cursor-pointer" onClick={handleSearch}>
+                        Buscar
+                    </button>
                 </div>
 
                 {/* Menú */}
-
                 {isAuthenticated && (
                     <>
                         <Link
